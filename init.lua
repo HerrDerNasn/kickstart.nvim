@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -150,7 +150,7 @@ vim.o.splitbelow = true
 --   See `:help lua-options`
 --   and `:help lua-options-guide`
 vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+-- vim.opt.listchars = { tab = ' ', trail = ' ', nbsp = ' ' }
 
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
@@ -165,6 +165,10 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = true
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
@@ -248,6 +252,8 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+
+  { 'catppuccin/nvim', name = 'catppuccin', priority = 1000 },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -345,6 +351,10 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>s', group = '[S]earch' },
+        { '<leader>e', group = 'Nvim Tr[e]e' },
+        { '<leader>j', group = '[J]ava' },
+        { '<leader>jr', group = '[R]efactor' },
+        { '<leader>jg', group = '[G]enerate' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -418,6 +428,14 @@ require('lazy').setup({
             require('telescope.themes').get_dropdown(),
           },
         },
+        defaults = {
+          file_ignore_patterns = {
+            'node_modules',
+            '.git',
+            'dist',
+            'target',
+          },
+        },
       }
 
       -- Enable Telescope extensions if they are installed
@@ -482,9 +500,54 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 'mason-org/mason.nvim', opts = {} },
-      'mason-org/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', version = '^1.0.0', opts = {} },
+      { 'mason-org/mason-lspconfig.nvim', version = '^1.0.0' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      {
+        'nvim-java/nvim-java',
+        config = function()
+          vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExctractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
+          vim.keymap.set(
+            'n',
+            '<leader>jra',
+            ':JavaRefactorExctractVariableAllOccurrence<CR>',
+            { desc = 'Create a variable for [A]ll occurrences from value at cursor/selection' }
+          )
+          vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExctractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExctractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExctractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jgc', function()
+            vim.lsp.buf.code_action {
+              context = {
+                only = {
+                  'source.generate.constructors',
+                },
+              },
+              apply = true,
+            }
+          end, { desc = 'Generate [C]onstructor' })
+          vim.keymap.set('n', '<leader>jgh', function()
+            vim.lsp.buf.code_action {
+              context = {
+                only = {
+                  'source.generate.hashCodeEquals',
+                },
+              },
+              apply = true,
+            }
+          end, { desc = 'Generate [H]ash code and equals' })
+          vim.keymap.set('n', '<leader>jgt', function()
+            vim.lsp.buf.code_action {
+              context = {
+                only = {
+                  'source.generate.toString',
+                },
+              },
+              apply = true,
+            }
+          end, { desc = 'Generate [T]o string' })
+        end,
+      },
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
@@ -542,6 +605,7 @@ require('lazy').setup({
           -- Execute a code action, usually your cursor needs to be on top of an error
           -- or a suggestion from your LSP for this to activate.
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+          map('<A-CR>', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
           -- Find references for the word under your cursor.
           map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -716,6 +780,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'prettier',
+        'cssls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -730,6 +796,19 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+          end,
+          jdtls = function()
+            require('java').setup {}
+            require('lspconfig').jdtls.setup {}
+          end,
+          cssls = function()
+            require('lspconfig').cssls.setup {
+              settings = {
+                css = { validate = true },
+                sass = { validate = true },
+                scss = { validate = true },
+              },
+            }
           end,
         },
       }
@@ -772,7 +851,16 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        html = { 'prettierd', 'prettier', stop_after_first = true },
+        css = { 'prettierd', 'prettier', stop_after_first = true },
+        scss = { 'prettierd', 'prettier', stop_after_first = true },
+        sass = { 'prettierd', 'prettier', stop_after_first = true },
+        json = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
+        java = { 'google_java_format' },
+        markdown = { 'prettierd', 'prettier', stop_after_first = true },
+        yamlfmt = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -835,7 +923,7 @@ require('lazy').setup({
         -- <c-k>: Toggle signature help
         --
         -- See :h blink-cmp-config-keymap for defining your own keymap
-        preset = 'default',
+        preset = 'enter',
 
         -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
         --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
@@ -944,7 +1032,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'java' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -964,6 +1052,37 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = function()
+      require('nvim-autopairs').setup {
+        check_ts = true,
+      }
+    end,
+  },
+
+  {
+    'nvim-tree/nvim-tree.lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('nvim-tree').setup {
+        view = {
+          side = 'right',
+          width = 30,
+        },
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = false,
+        },
+      }
+      vim.keymap.set('n', '<leader>et', ':NvimTreeToggle<CR>', { desc = 'Toggle file tree' })
+      vim.keymap.set('n', '<leader>ef', ':NvimTreeFocus<CR>', { desc = 'Focus file tree' })
+    end,
+  },
+
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -973,7 +1092,7 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.debug',
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
@@ -1010,6 +1129,52 @@ require('lazy').setup({
       lazy = '💤 ',
     },
   },
+})
+
+vim.cmd.colorscheme 'catppuccin-mocha'
+
+vim.api.nvim_create_autocmd({ 'BufNewFile', 'Bufread' }, {
+  pattern = '*.java',
+  callback = function()
+    local filepath = vim.fn.expand '%:p'
+    local class_name = vim.fn.expand('%:t'):gsub('%.java$', '')
+
+    -- Only proceed if the buffer is empty
+    if vim.fn.line '$' > 1 or vim.fn.getline(1) ~= '' then
+      return
+    end
+
+    local lines = {}
+
+    -- Match Maven-style paths
+    local package_path = nil
+
+    for _, base in ipairs { '/src/main/java/', '/src/test/java/' } do
+      local index = filepath:find(base, 1, true)
+      if index then
+        package_path = filepath:sub(index + #base)
+        package_path = package_path:match '(.*/)' or ''
+        package_path = package_path:gsub('/', '.'):gsub('%.$', '')
+        break
+      end
+    end
+
+    -- Insert package line if detected
+    if package_path then
+      table.insert(lines, 'package ' .. package_path .. ';')
+      table.insert(lines, '') -- blank line
+    end
+
+    -- Insert public class stub
+    table.insert(lines, 'public class ' .. class_name .. ' {')
+    table.insert(lines, '')
+    table.insert(lines, '}')
+
+    vim.api.nvim_buf_set_lines(0, 0, 0, false, lines)
+
+    -- Move cursor inside class
+    vim.api.nvim_win_set_cursor(0, { #lines - 1, 0 })
+  end,
 })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
