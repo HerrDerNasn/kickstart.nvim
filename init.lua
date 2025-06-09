@@ -1,89 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-========                                    .-----.          ========
-========         .----------------------.   | === |          ========
-========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||   KICKSTART.NVIM   ||   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____o|          ========
-========         `"")----------------(""`   ___________      ========
-========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
-========                                                     ========
-=====================================================================
-=====================================================================
-
-What is Kickstart?
-
-  Kickstart.nvim is *not* a distribution.
-
-  Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
-
-    Once you've done that, you can start exploring, configuring and tinkering to
-    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
-    or immediately breaking it into modular pieces. It's up to you!
-
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
-
-    After understanding a bit more about Lua, you can use `:help lua-guide` as a
-    reference for how Neovim integrates Lua.
-    - :help lua-guide
-    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
-
-Kickstart Guide:
-
-  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
-
-    If you don't know what this means, type the following:
-      - <escape key>
-      - :
-      - Tutor
-      - <enter key>
-
-    (If you already know the Neovim basics, you can skip this step.)
-
-  Once you've completed that, you can continue working through **AND READING** the rest
-  of the kickstart init.lua.
-
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
-
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite Neovim features.
-
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not exactly sure of what you're looking for.
-
-  I have left several `:help X` comments throughout the init.lua
-    These are hints about where to find more information about the relevant settings,
-    plugins or Neovim features used in Kickstart.
-
-   NOTE: Look for lines like this
-
-    Throughout the file. These are for you, the reader, to help you understand what is happening.
-    Feel free to delete them once you know what you're doing, but they should serve as a guide
-    for when you are first encountering a few different constructs in your Neovim config.
-
-If you experience any errors while trying to install kickstart, run `:checkhealth` for more info.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now! :)
---]]
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
@@ -188,26 +102,23 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
 --
 --  See `:help wincmd` for a list of all window commands
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-Left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set('n', '<C-Right>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set('n', '<C-Down>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<C-Up>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 
--- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
--- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
--- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
--- vim.keymap.set("n", "<C-S-j>", "<C-w>J", { desc = "Move window to the lower" })
--- vim.keymap.set("n", "<C-S-k>", "<C-w>K", { desc = "Move window to the upper" })
+vim.keymap.set('n', '<A-Left>', '<C-o>', { noremap = true, silent = true })
+vim.keymap.set('n', '<A-Right>', '<C-i>', { noremap = true, silent = true })
+vim.keymap.set('n', '<A-Up>', '{', { noremap = true, silent = true })
+vim.keymap.set('n', '<A-Down>', '}', { noremap = true, silent = true })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -357,6 +268,8 @@ require('lazy').setup({
         { '<leader>jg', group = '[G]enerate' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it', mode = { 'n' } },
+        { '<leader>a', group = '[A]ngular', mode = { 'n' } },
       },
     },
   },
@@ -503,49 +416,57 @@ require('lazy').setup({
       { 'mason-org/mason.nvim', version = '^1.0.0', opts = {} },
       { 'mason-org/mason-lspconfig.nvim', version = '^1.0.0' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      --      {
+      --        'nvim-java/nvim-java',
+      --        config = function()
+      --         vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExctractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
+      --         vim.keymap.set(
+      --           'n',
+      --           '<leader>jra',
+      --          ':JavaRefactorExctractVariableAllOccurrence<CR>',
+      --         { desc = 'Create a variable for [A]ll occurrences from value at cursor/selection' }
+      --      )
+      --     vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExctractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
+      --    vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExctractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
+      --         vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExctractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
+      --         vim.keymap.set('n', '<leader>jgc', function()
+      --          vim.lsp.buf.code_action {
+      --           context = {
+      --              only = {
+      --               'source.generate.constructors',
+      --            },
+      --          },
+      --         apply = true,
+      --      }
+      --      end, { desc = 'Generate [C]onstructor' })
+      --     vim.keymap.set('n', '<leader>jgh', function()
+      --       vim.lsp.buf.code_action {
+      --        context = {
+      --         only = {
+      --          'source.generate.hashCodeEquals',
+      --        },
+      --      },
+      --      apply = true,
+      --    }
+      --   end, { desc = 'Generate [H]ash code and equals' })
+      --   vim.keymap.set('n', '<leader>jgt', function()
+      --     vim.lsp.buf.code_action {
+      --       context = {
+      --         only = {
+      --           'source.generate.toString',
+      --         },
+      --       },
+      --       apply = true,
+      --     }
+      --   end, { desc = 'Generate [T]o string' })
+      -- end,
+      --     },
       {
-        'nvim-java/nvim-java',
+        'joeveiga/ng.nvim',
         config = function()
-          vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExctractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
-          vim.keymap.set(
-            'n',
-            '<leader>jra',
-            ':JavaRefactorExctractVariableAllOccurrence<CR>',
-            { desc = 'Create a variable for [A]ll occurrences from value at cursor/selection' }
-          )
-          vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExctractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
-          vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExctractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
-          vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExctractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
-          vim.keymap.set('n', '<leader>jgc', function()
-            vim.lsp.buf.code_action {
-              context = {
-                only = {
-                  'source.generate.constructors',
-                },
-              },
-              apply = true,
-            }
-          end, { desc = 'Generate [C]onstructor' })
-          vim.keymap.set('n', '<leader>jgh', function()
-            vim.lsp.buf.code_action {
-              context = {
-                only = {
-                  'source.generate.hashCodeEquals',
-                },
-              },
-              apply = true,
-            }
-          end, { desc = 'Generate [H]ash code and equals' })
-          vim.keymap.set('n', '<leader>jgt', function()
-            vim.lsp.buf.code_action {
-              context = {
-                only = {
-                  'source.generate.toString',
-                },
-              },
-              apply = true,
-            }
-          end, { desc = 'Generate [T]o string' })
+          local ng = require 'ng'
+          vim.keymap.set('n', '<leader>at', ng.goto_template_for_component, { desc = 'Goto [T]emplate of component', noremap = true, silent = true })
+          vim.keymap.set('n', '<leader>ac', ng.goto_component_with_template_file, { desc = 'Goto [C]omponent of template', noremap = true, silent = true })
         end,
       },
 
@@ -762,6 +683,16 @@ require('lazy').setup({
             },
           },
         },
+        angularls = {},
+        cssls = {},
+        emmet_ls = {},
+        eslint = {},
+        helm_ls = {},
+        html = {},
+        jdtls = {},
+        jsonls = {},
+        lemminx = {},
+        ts_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -780,8 +711,12 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'prettier',
-        'cssls',
+        'prettierd',
+        'google-java-format',
+        'java-debug-adapter',
+        'java-test',
+        'jsonlint',
+        'yamllint',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -797,10 +732,10 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
-          jdtls = function()
-            require('java').setup {}
-            require('lspconfig').jdtls.setup {}
-          end,
+          --       jdtls = function()
+          --         require('java').setup {}
+          --         require('lspconfig').jdtls.setup {}
+          --       end,
           cssls = function()
             require('lspconfig').cssls.setup {
               settings = {
@@ -852,15 +787,15 @@ require('lazy').setup({
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         javascript = { 'prettierd', 'prettier', stop_after_first = true },
+        typescript = { 'prettierd', 'prettier', stop_after_first = true },
         html = { 'prettierd', 'prettier', stop_after_first = true },
         css = { 'prettierd', 'prettier', stop_after_first = true },
         scss = { 'prettierd', 'prettier', stop_after_first = true },
         sass = { 'prettierd', 'prettier', stop_after_first = true },
         json = { 'prettierd', 'prettier', stop_after_first = true },
-        typescript = { 'prettierd', 'prettier', stop_after_first = true },
-        java = { 'google_java_format' },
         markdown = { 'prettierd', 'prettier', stop_after_first = true },
         yamlfmt = { 'prettierd', 'prettier', stop_after_first = true },
+        java = { 'google_java_format' },
       },
     },
   },
@@ -964,28 +899,6 @@ require('lazy').setup({
     },
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    config = function()
-      ---@diagnostic disable-next-line: missing-fields
-      require('tokyonight').setup {
-        styles = {
-          comments = { italic = false }, -- Disable italics in comments
-        },
-      }
-
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
-    end,
-  },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -1083,32 +996,22 @@ require('lazy').setup({
     end,
   },
 
-  -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
-  -- init.lua. If you want these files, they are in the repository, so you can just download them and
-  -- place them in the correct locations.
+  {
+    'NeogitOrg/neogit',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'sindrets/diffview.nvim',
+      'nvim-telescope/telescope.nvim',
+    },
+    config = function()
+      require('neogit').setup {
+        vim.keymap.set('n', '<leader>go', ':Neogit<CR>', { desc = '[O]pen git status' }),
+        vim.keymap.set('n', '<leader>gc', ':Neogit commit<CR>', { desc = '[C]ommit' }),
+      }
+    end,
+  },
 
-  -- NOTE: Next step on your Neovim journey: Add/Configure additional plugins for Kickstart
-  --
-  --  Here are some example plugins that I've included in the Kickstart repository.
-  --  Uncomment any of the lines below to enable them (you will need to restart nvim).
-  --
   require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
-  -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
-
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
-  --    This is the easiest way to modularize your config.
-  --
-  --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  -- { import = 'custom.plugins' },
-  --
-  -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
-  -- Or use telescope!
-  -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-  -- you can continue same window with `<space>sr` which resumes last telescope search
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
