@@ -342,11 +342,16 @@ require('lazy').setup({
           },
         },
         defaults = {
+          path_display = {
+            filename_first = {
+              reverse_directories = true,
+            },
+          },
           file_ignore_patterns = {
             'node_modules',
-            '.git',
             'dist',
             'target',
+            '.git',
           },
         },
       }
@@ -425,161 +430,171 @@ require('lazy').setup({
       },
       { 'mason-org/mason-lspconfig.nvim', version = '^1.0.0' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      {
-        'mfussenegger/nvim-jdtls',
-        fd = { 'java' },
-        opts = function()
-          local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
-          local workspace_dir = vim.fn.stdpath 'data' .. '/site/java/workspace-root/' .. project_name
-          vim.fn.mkdir(workspace_dir, 'p')
-          local mason_registry = require 'mason-registry'
-          local jdtls = mason_registry.get_package 'jdtls'
-          local jdtls_path = jdtls:get_install_path()
-          local lombok = mason_registry.get_package 'lombok-nightly'
-          local lombok_path = lombok:get_install_path()
-          return {
-            cmd = {
-              vim.fn.expand '$HOME' .. '/.sdkman/candidates/java/21-tem/bin/java',
-              '-Declipse.application=org.eclipse.jdt.ls.core.id1',
-              '-Dosgi.bundles.defaultStartLevel=4',
-              '-Declipse.product=org.eclipse.jdt.ls.core.product',
-              '-Dlog.protocol=true',
-              '-Dlog.level=ALL',
-              '-javaagent:' .. lombok_path .. '/lombok.jar',
-              '-Xmx1g',
-              '--add-modules=ALL-SYSTEM',
-              '--add-opens',
-              'java.base/java.util=ALL-UNNAMED',
-              '--add-opens',
-              'java.base/java.lang=ALL-UNNAMED',
-              '-jar',
-              jdtls_path .. '/plugins/org.eclipse.equinox.launcher.jar',
-              '-configuration',
-              jdtls_path .. '/config_linux',
-              '-data',
-              workspace_dir,
-            },
-            root_dir = vim.fs.root(0, { 'mvnw', 'gradlew', 'pom.xml', '.git' }) or vim.loop.cwd(),
-            settings = {
-              java = {
-                eclipse = { downloadSources = true },
-                configuration = {
-                  updateBuildConfiguration = 'interactive',
-                  annotationProcessing = {
-                    enabled = true,
-                  },
-                },
-                maven = { downloadSources = true },
-                implementationsCodeLens = { enabled = true },
-                referencesCodeLens = { enabled = true },
-                inlayHints = { parameterNames = { enabled = 'all' } },
-                signatureHelp = { enabled = true },
-                completion = {
-                  favoriteStaticMembers = {
-                    'org.hamcrest.MatcherAssert.assertThat',
-                    'org.hamcrest.Matchers.*',
-                    'org.hamcrest.CoreMatchers.*',
-                    'org.junit.jupiter.api.Assertions.*',
-                    'java.util.Objects.requireNonNull',
-                    'java.util.Objects.requireNonNullElse',
-                    'org.mockito.Mockito.*',
-                  },
-                },
-                sources = {
-                  organizeImports = {
-                    starThreshold = 9999,
-                    staticStarThreshold = 9999,
-                  },
-                },
-              },
-            },
-            init_options = {
-              bundles = {
-                vim.fn.expand '$MASON/share/java-debug-adapter/com.microsoft.java.debug.plugin.jar',
-                -- unpack remaining bundles
-                (table.unpack or unpack)(vim.split(vim.fn.glob '$MASON/share/java-test/*.jar', '\n', {})),
-              },
-            },
-            handlers = {
-              ['$/progress'] = function() end, -- disable progress updates.
-            },
-            filetypes = { 'java' },
-            on_attach = function()
-              require('jdtls').setup_dap { hotcodereplace = 'auto' }
-            end,
-          }
-        end,
-
-        config = function(_, opts)
-          -- setup autocmd on filetype detect java
-          vim.api.nvim_create_autocmd('Filetype', {
-            pattern = 'java', -- autocmd to start jdtls
-            callback = function()
-              if opts.root_dir and opts.root_dir ~= '' then
-                require('jdtls').start_or_attach(opts)
-              end
-            end,
-          })
-          -- create autocmd to load main class configs on LspAttach.
-          -- This ensures that the LSP is fully attached.
-          -- See https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
-          vim.api.nvim_create_autocmd('LspAttach', {
-            pattern = '*.java',
-            callback = function(args)
-              local client = vim.lsp.get_client_by_id(args.data.client_id)
-              -- ensure that only the jdtls client is activated
-              if client.name == 'jdtls' then
-                require('jdtls.dap').setup_dap_main_class_configs()
-              end
-            end,
-          })
-        end,
-      },
       -- {
-      --   'nvim-java/nvim-java',
-      --   config = function()
-      --     vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExctractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
-      --     vim.keymap.set(
-      --       'n',
-      --       '<leader>jra',
-      --       ':JavaRefactorExctractVariableAllOccurrence<CR>',
-      --       { desc = 'Create a variable for [A]ll occurrences from value at cursor/selection' }
-      --     )
-      --     vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExctractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
-      --     vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExctractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
-      --     vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExctractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
-      --     vim.keymap.set('n', '<leader>jgc', function()
-      --       vim.lsp.buf.code_action {
-      --         context = {
-      --           only = {
-      --             'source.generate.constructors',
+      --   'mfussenegger/nvim-jdtls',
+      --   fd = { 'java' },
+      --   opts = function()
+      --     local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')
+      --     local workspace_dir = vim.fn.stdpath 'data' .. '/site/java/workspace-root/' .. project_name
+      --     vim.fn.mkdir(workspace_dir, 'p')
+      --     local mason_registry = require 'mason-registry'
+      --     local jdtls_pkg = mason_registry.get_package 'jdtls'
+      --     local jdtls_path = jdtls_pkg:get_install_path()
+      --     local lombok = mason_registry.get_package 'lombok-nightly'
+      --     local lombok_path = lombok:get_install_path()
+      --     local jdtls = require 'jdtls'
+      --     local extendedClientCapabilities = jdtls.extendedClientCapabilities
+      --     extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
+      --     return {
+      --       cmd = {
+      --         vim.fn.expand '$HOME' .. '/.sdkman/candidates/java/21-tem/bin/java',
+      --         '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+      --         '-Dosgi.bundles.defaultStartLevel=4',
+      --         '-Declipse.product=org.eclipse.jdt.ls.core.product',
+      --         '-Dlog.protocol=true',
+      --         '-Dlog.level=ALL',
+      --         '-javaagent:' .. lombok_path .. '/lombok.jar',
+      --         '-Xmx1g',
+      --         '--add-modules=ALL-SYSTEM',
+      --         '--add-opens',
+      --         'java.base/java.util=ALL-UNNAMED',
+      --         '--add-opens',
+      --         'java.base/java.lang=ALL-UNNAMED',
+      --         '-jar',
+      --         jdtls_path .. '/plugins/org.eclipse.equinox.launcher.jar',
+      --         '-configuration',
+      --         jdtls_path .. '/config_linux',
+      --         '-data',
+      --         workspace_dir,
+      --       },
+      --       root_dir = vim.fs.root(0, { 'mvnw', 'gradlew', 'pom.xml', '.git' }) or vim.loop.cwd(),
+      --       settings = {
+      --         java = {
+      --           eclipse = { downloadSources = true },
+      --           configuration = {
+      --             updateBuildConfiguration = 'interactive',
       --           },
-      --         },
-      --         apply = true,
-      --       }
-      --     end, { desc = 'Generate [C]onstructor' })
-      --     vim.keymap.set('n', '<leader>jgh', function()
-      --       vim.lsp.buf.code_action {
-      --         context = {
-      --           only = {
-      --             'source.generate.hashCodeEquals',
+      --           maven = { downloadSources = true },
+      --           implementationsCodeLens = { enabled = true },
+      --           referencesCodeLens = { enabled = true },
+      --           inlayHints = { parameterNames = { enabled = 'all' } },
+      --           signatureHelp = { enabled = true },
+      --           references = {
+      --             includeDecompiledSources = true,
       --           },
-      --         },
-      --         apply = true,
-      --       }
-      --     end, { desc = 'Generate [H]ash code and equals' })
-      --     vim.keymap.set('n', '<leader>jgt', function()
-      --       vim.lsp.buf.code_action {
-      --         context = {
-      --           only = {
-      --             'source.generate.toString',
+      --           completion = {
+      --             favoriteStaticMembers = {
+      --               'org.hamcrest.MatcherAssert.assertThat',
+      --               'org.hamcrest.Matchers.*',
+      --               'org.hamcrest.CoreMatchers.*',
+      --               'org.junit.jupiter.api.Assertions.*',
+      --               'java.util.Objects.requireNonNull',
+      --               'java.util.Objects.requireNonNullElse',
+      --               'org.mockito.Mockito.*',
+      --             },
       --           },
+      --           sources = {
+      --             organizeImports = {
+      --               starThreshold = 9999,
+      --               staticStarThreshold = 9999,
+      --             },
+      --           },
+      --           extendedClientCapabilities = extendedClientCapabilities,
       --         },
-      --         apply = true,
-      --       }
-      --     end, { desc = 'Generate [T]o string' })
+      --       },
+      --       init_options = {
+      --         bundles = {
+      --           vim.fn.expand '$MASON/share/java-debug-adapter/com.microsoft.java.debug.plugin.jar',
+      --           -- unpack remaining bundles
+      --           (table.unpack or unpack)(vim.split(vim.fn.glob '$MASON/share/java-test/*.jar', '\n', {})),
+      --         },
+      --       },
+      --       handlers = {
+      --         ['$/progress'] = function() end, -- disable progress updates.
+      --       },
+      --       filetypes = { 'java' },
+      --       on_attach = function(client, bufnr)
+      --         local _, _ = pcall(vim.lsp.codelens.refresh)
+      --         require('jdtls').setup_dap { hotcodereplace = 'auto' }
+      --         require('nvim.lsp').common_on_attach(client, bufnr)
+      --         -- local status_ok, jdtls_dap = pcall(require, 'jdtls.dap')
+      --         -- if status_ok then
+      --         --   pcall(jdtls_dap.setup_dap_main_class_configs())
+      --         -- end
+      --       end,
+      --     }
+      --   end,
+      --
+      --   config = function(_, opts)
+      --     -- setup autocmd on filetype detect java
+      --     vim.api.nvim_create_autocmd('Filetype', {
+      --       pattern = 'java', -- autocmd to start jdtls
+      --       callback = function()
+      --         if opts.root_dir and opts.root_dir ~= '' then
+      --           require('jdtls').start_or_attach(opts)
+      --         end
+      --       end,
+      --     })
+      --     -- create autocmd to load main class configs on LspAttach.
+      --     -- This ensures that the LSP is fully attached.
+      --     -- See https://github.com/mfussenegger/nvim-jdtls#nvim-dap-configuration
+      --     vim.api.nvim_create_autocmd('LspAttach', {
+      --       pattern = '*.java',
+      --       callback = function(args)
+      --         local client = vim.lsp.get_client_by_id(args.data.client_id)
+      --         -- ensure that only the jdtls client is activated
+      --         if client.name == 'jdtls' then
+      --           require('jdtls.dap').setup_dap_main_class_configs()
+      --         end
+      --       end,
+      --     })
       --   end,
       -- },
+      {
+        'nvim-java/nvim-java',
+        config = function()
+          vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExctractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
+          vim.keymap.set(
+            'n',
+            '<leader>jra',
+            ':JavaRefactorExctractVariableAllOccurrence<CR>',
+            { desc = 'Create a variable for [A]ll occurrences from value at cursor/selection' }
+          )
+          vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExctractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExctractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExctractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jgc', function()
+            vim.lsp.buf.code_action {
+              context = {
+                only = {
+                  'source.generate.constructors',
+                },
+              },
+              apply = true,
+            }
+          end, { desc = 'Generate [C]onstructor' })
+          vim.keymap.set('n', '<leader>jgh', function()
+            vim.lsp.buf.code_action {
+              context = {
+                only = {
+                  'source.generate.hashCodeEquals',
+                },
+              },
+              apply = true,
+            }
+          end, { desc = 'Generate [H]ash code and equals' })
+          vim.keymap.set('n', '<leader>jgt', function()
+            vim.lsp.buf.code_action {
+              context = {
+                only = {
+                  'source.generate.toString',
+                },
+              },
+              apply = true,
+            }
+          end, { desc = 'Generate [T]o string' })
+        end,
+      },
       {
         'joeveiga/ng.nvim',
         config = function()
@@ -853,7 +868,7 @@ require('lazy').setup({
             require('lspconfig')[server_name].setup(server)
           end,
           jdtls = function()
-            -- require('java').setup {}
+            require('java').setup {}
             require('lspconfig').jdtls.setup {}
           end,
           cssls = function()
@@ -1102,13 +1117,22 @@ require('lazy').setup({
       require('nvim-tree').setup {
         view = {
           side = 'right',
-          width = 30,
+          width = 60,
         },
         renderer = {
           group_empty = true,
         },
+        update_focused_file = {
+          enable = true,
+        },
         filters = {
-          dotfiles = false,
+          custom = {
+            '^.git$',
+          },
+          exclude = {
+            '^.vscode$',
+            '^.vscode/launch.json$',
+          },
         },
       }
       vim.keymap.set('n', '<leader>et', ':NvimTreeToggle<CR>', { desc = 'Toggle file tree' })
