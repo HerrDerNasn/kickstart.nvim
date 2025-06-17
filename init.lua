@@ -1,4 +1,4 @@
--- Set <space> as the leader key
+-- Set <space> as the leader key:
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
@@ -46,7 +46,7 @@ vim.o.smartcase = true
 vim.o.signcolumn = 'yes'
 
 -- Decrease update time
-vim.o.updatetime = 250
+vim.o.updatetime = 1000
 
 -- Decrease mapped sequence wait time
 vim.o.timeoutlen = 300
@@ -418,9 +418,9 @@ require('lazy').setup({
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
-      { 
-        'mason-org/mason.nvim', 
-        version = '^1.0.0', 
+      {
+        'mason-org/mason.nvim',
+        version = '^1.0.0',
         opts = {
           registries = {
             'github:nvim-java/mason-registry', -- Added nvim-java registry for lombok install via Mason
@@ -725,7 +725,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
-        'prettierd',
+        'prettier',
         'google-java-format',
         'java-debug-adapter',
         'java-test',
@@ -800,15 +800,15 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettierd', 'prettier', stop_after_first = true },
-        typescript = { 'prettierd', 'prettier', stop_after_first = true },
-        html = { 'prettierd', 'prettier', stop_after_first = true },
-        css = { 'prettierd', 'prettier', stop_after_first = true },
-        scss = { 'prettierd', 'prettier', stop_after_first = true },
-        sass = { 'prettierd', 'prettier', stop_after_first = true },
-        json = { 'prettierd', 'prettier', stop_after_first = true },
-        markdown = { 'prettierd', 'prettier', stop_after_first = true },
-        yamlfmt = { 'prettierd', 'prettier', stop_after_first = true },
+        javascript = { 'prettier', timeout_ms = 2500 },
+        typescript = { 'prettier', timeout_ms = 2500 },
+        html = { 'prettier', timeout_ms = 2500 },
+        css = { 'prettier', timeout_ms = 2500 },
+        scss = { 'prettier', timeout_ms = 2500 },
+        sass = { 'prettier', timeout_ms = 2500 },
+        json = { 'prettier', timeout_ms = 2500 },
+        markdown = { 'prettier', timeout_ms = 2500 },
+        yamlfmt = { 'prettier', timeout_ms = 2500 },
         java = { 'google_java_format' },
       },
     },
@@ -906,7 +906,7 @@ require('lazy').setup({
       -- the rust implementation via `'prefer_rust_with_warning'`
       --
       -- See :h blink-cmp-config-fuzzy for more information
-      fuzzy = { implementation = 'lua' },
+      fuzzy = { implementation = 'prefer_rust_with_warning' },
 
       -- Shows a signature help window while you type arguments for a function
       signature = { enabled = true },
