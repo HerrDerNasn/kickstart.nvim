@@ -80,8 +80,8 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
-vim.o.tabstop = 2
-vim.o.shiftwidth = 2
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
 vim.o.expandtab = true
 
 -- [[ Basic Keymaps ]]
@@ -109,11 +109,11 @@ vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' }
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-Left>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-Right>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-Right>', '<C-w><C-l>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-Down>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-Down>', '<C-w><C-j>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-vim.keymap.set('n', '<C-Up>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set('n', '<C-Up>', '<C-w><C-k>', { desc = 'Move focus to the left window' })
 
 vim.keymap.set('n', '<A-Left>', '<C-o>', { noremap = true, silent = true })
 vim.keymap.set('n', '<A-Right>', '<C-i>', { noremap = true, silent = true })
@@ -483,6 +483,7 @@ require('lazy').setup({
           vim.keymap.set('n', '<leader>ac', ng.goto_component_with_template_file, { desc = 'Goto [C]omponent of template', noremap = true, silent = true })
         end,
       },
+      'nanotee/sqls.nvim',
 
       -- Useful status updates for LSP.
       { 'j-hui/fidget.nvim', opts = {} },
@@ -731,6 +732,8 @@ require('lazy').setup({
         'java-test',
         'jsonlint',
         'yamllint',
+        'sql-formatter',
+        'sqls',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -757,6 +760,13 @@ require('lazy').setup({
                 sass = { validate = true },
                 scss = { validate = true },
               },
+            }
+          end,
+          sqls = function()
+            require('lspconfig').sqls.setup {
+              on_attach = function(client, bufnr)
+                require('sqls').on_attach(client, bufnr)
+              end,
             }
           end,
         },
@@ -810,6 +820,7 @@ require('lazy').setup({
         markdown = { 'prettier', timeout_ms = 2500 },
         yamlfmt = { 'prettier', timeout_ms = 2500 },
         java = { 'google_java_format' },
+        sql = { 'sql_formatter' },
       },
     },
   },
@@ -887,7 +898,7 @@ require('lazy').setup({
       completion = {
         -- By default, you may press `<c-space>` to show the documentation.
         -- Optionally, set `auto_show = true` to show the documentation after a delay.
-        documentation = { auto_show = false, auto_show_delay_ms = 500 },
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
       },
 
       sources = {
@@ -1032,6 +1043,15 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>gc', ':Neogit commit<CR>', { desc = '[C]ommit' }),
       }
     end,
+  },
+
+  {
+    'f-person/git-blame.nvim',
+    event = 'VeryLazy',
+    opts = {
+      enabled = true,
+      virtual_text_column = 100,
+    },
   },
 
   require 'kickstart.plugins.debug',
