@@ -804,6 +804,16 @@ require('lazy').setup({
           }
         end
       end,
+      formatters = {
+        palantir = {
+          command = '/root/.sdkman/candidates/java/current/bin/java',
+          args = {
+            '-jar',
+            vim.fn.expand '~/.local/share/java/palantir.jar',
+            '-',
+          },
+        },
+      },
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -819,7 +829,7 @@ require('lazy').setup({
         json = { 'prettier', timeout_ms = 2500 },
         markdown = { 'prettier', timeout_ms = 2500 },
         yamlfmt = { 'prettier', timeout_ms = 2500 },
-        java = { 'google_java_format' },
+        java = { 'palantir', timeout_ms = 5000 },
         sql = { 'sql_formatter' },
       },
     },
