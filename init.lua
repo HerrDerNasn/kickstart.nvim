@@ -266,6 +266,9 @@ require('lazy').setup({
         { '<leader>j', group = '[J]ava' },
         { '<leader>jr', group = '[R]efactor' },
         { '<leader>jg', group = '[G]enerate' },
+        { '<leader>jt', group = '[T]est' },
+        { '<leader>jtr', group = '[R]un' },
+        { '<leader>jtd', group = '[D]ebug' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
         { '<leader>g', group = '[G]it', mode = { 'n' } },
@@ -433,16 +436,21 @@ require('lazy').setup({
       {
         'nvim-java/nvim-java',
         config = function()
-          vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExctractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExtractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
           vim.keymap.set(
             'n',
             '<leader>jra',
-            ':JavaRefactorExctractVariableAllOccurrence<CR>',
+            ':JavaRefactorExtractVariableAllOccurrence<CR>',
             { desc = 'Create a variable for [A]ll occurrences from value at cursor/selection' }
           )
-          vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExctractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
-          vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExctractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
-          vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExctractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExtractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExtractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExtractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
+          vim.keymap.set('n', '<leader>jtrm', ':JavaTestRunCurrentMethod<CR>', { desc = '[M]ethod' })
+          vim.keymap.set('n', '<leader>jtrc', ':JavaTestRunCurrentClass<CR>', { desc = '[C]lass' })
+          vim.keymap.set('n', '<leader>jtdm', ':JavaTestDebugCurrentMethod<CR>', { desc = '[M]ethod' })
+          vim.keymap.set('n', '<leader>jtdc', ':JavaTestDebugCurrentClass<CR>', { desc = '[C]lass' })
+          vim.keymap.set('n', '<leader>jtv', ':JavaTestViewLastReport<CR>', { desc = '[V]iew last report' })
           vim.keymap.set('n', '<leader>jgc', function()
             vim.lsp.buf.code_action {
               context = {
@@ -790,7 +798,7 @@ require('lazy').setup({
     },
     opts = {
       notify_on_error = false,
-      format_on_save = function(bufnr)
+      format_after_save = function(bufnr)
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
@@ -799,7 +807,6 @@ require('lazy').setup({
           return nil
         else
           return {
-            timeout_ms = 500,
             lsp_format = 'fallback',
           }
         end
@@ -810,6 +817,7 @@ require('lazy').setup({
           args = {
             '-jar',
             vim.fn.expand '~/.local/share/java/palantir.jar',
+            '--palantir',
             '-',
           },
         },
@@ -820,16 +828,16 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { 'prettier', timeout_ms = 2500 },
-        typescript = { 'prettier', timeout_ms = 2500 },
-        html = { 'prettier', timeout_ms = 2500 },
-        css = { 'prettier', timeout_ms = 2500 },
-        scss = { 'prettier', timeout_ms = 2500 },
-        sass = { 'prettier', timeout_ms = 2500 },
-        json = { 'prettier', timeout_ms = 2500 },
-        markdown = { 'prettier', timeout_ms = 2500 },
-        yamlfmt = { 'prettier', timeout_ms = 2500 },
-        java = { 'palantir', timeout_ms = 5000 },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        scss = { 'prettier' },
+        sass = { 'prettier' },
+        json = { 'prettier' },
+        markdown = { 'prettier' },
+        yamlfmt = { 'prettier' },
+        java = { 'palantir' },
         sql = { 'sql_formatter' },
       },
     },
