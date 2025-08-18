@@ -1009,6 +1009,10 @@ require('lazy').setup({
   },
 
   {
+    'nvim-treesitter/nvim-treesitter-context',
+  },
+
+  {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     config = function()
