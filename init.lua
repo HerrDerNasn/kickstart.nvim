@@ -423,7 +423,6 @@ require('lazy').setup({
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       {
         'mason-org/mason.nvim',
-        version = '^1.0.0',
         opts = {
           registries = {
             'github:nvim-java/mason-registry', -- Added nvim-java registry for lombok install via Mason
@@ -431,7 +430,7 @@ require('lazy').setup({
           },
         },
       },
-      { 'mason-org/mason-lspconfig.nvim', version = '^1.0.0' },
+      { 'mason-org/mason-lspconfig.nvim' },
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       {
         'nvim-java/nvim-java',
@@ -710,7 +709,16 @@ require('lazy').setup({
         cssls = {},
         emmet_ls = {},
         eslint = {},
-        helm_ls = {},
+        helm_ls = {
+          settings = {
+            ['helm-ls'] = {
+              yamlls = {
+                path = 'yaml-language-server',
+              },
+            },
+          },
+        },
+        yamlls = {},
         html = {},
         jdtls = {},
         jsonls = {},
@@ -1074,6 +1082,12 @@ require('lazy').setup({
       enabled = true,
       virtual_text_column = 100,
     },
+  },
+
+  {
+    'qvalentin/helm-ls.nvim',
+    ft = 'helm',
+    opts = {},
   },
 
   require 'kickstart.plugins.debug',
