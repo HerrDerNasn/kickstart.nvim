@@ -18,6 +18,10 @@ return {
           },
         },
       },
+      notify = {
+        replace = true,
+        merge = true,
+      },
       routes = {
         {
           filter = {
