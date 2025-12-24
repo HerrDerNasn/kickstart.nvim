@@ -16,7 +16,7 @@ return {
             enable = false,
           },
           jdk = {
-            enable = false,
+            auto_install = false,
           },
         }
         vim.lsp.enable 'jdtls'
