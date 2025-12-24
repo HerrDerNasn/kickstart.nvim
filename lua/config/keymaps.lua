@@ -17,3 +17,7 @@ vim.keymap.set('n', '<A-Left>', '<C-o>', { noremap = true, silent = true })
 vim.keymap.set('n', '<A-Right>', '<C-i>', { noremap = true, silent = true })
 vim.keymap.set('n', '<A-Up>', '{', { noremap = true, silent = true })
 vim.keymap.set('n', '<A-Down>', '}', { noremap = true, silent = true })
+
+-- Remap uppercase commands to lowercase in command-line mode
+vim.keymap.set('c', 'W', 'w', { remap = true })
+vim.keymap.set('c', 'Q', 'q', { remap = true })
