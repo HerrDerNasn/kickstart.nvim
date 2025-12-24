@@ -19,30 +19,13 @@ return {
             enable = false,
           },
         }
-        vim.lsp.enable 'jdtls'
-        vim.keymap.set('n', '<leader>jrv', ':JavaRefactorExtractVariable<CR>', { desc = 'Create a [V]ariable from value at cursor/selection' })
-        vim.keymap.set(
-          'n',
-          '<leader>jra',
-          ':JavaRefactorExtractVariableAllOccurrence<CR>',
-          { desc = 'Create a variable for [A]ll occurrences from value at cursor/selection' }
-        )
-        vim.keymap.set('n', '<leader>jrc', ':JavaRefactorExtractConstant<CR>', { desc = 'Create a [C]onstant from value at cursor/selection' })
-        vim.keymap.set('n', '<leader>jrm', ':JavaRefactorExtractMethod<CR>', { desc = 'Create a [M]ethod from value at cursor/selection' })
-        vim.keymap.set('n', '<leader>jrf', ':JavaRefactorExtractField<CR>', { desc = 'Create a [F]ield from value at cursor/selection' })
-        vim.keymap.set('n', '<leader>jtrm', ':JavaTestRunCurrentMethod<CR>', { desc = '[M]ethod' })
-        vim.keymap.set('n', '<leader>jtrc', ':JavaTestRunCurrentClass<CR>', { desc = '[C]lass' })
-        vim.keymap.set('n', '<leader>jtdm', ':JavaTestDebugCurrentMethod<CR>', { desc = '[M]ethod' })
-        vim.keymap.set('n', '<leader>jtdc', ':JavaTestDebugCurrentClass<CR>', { desc = '[C]lass' })
-        vim.keymap.set('n', '<leader>jtv', ':JavaTestViewLastReport<CR>', { desc = '[V]iew last report' })
+        vim.lsp.enable 'java'
       end,
     },
     {
       'joeveiga/ng.nvim',
       config = function()
-        local ng = require 'ng'
-        vim.keymap.set('n', '<leader>at', ng.goto_template_for_component, { desc = 'Goto [T]emplate of component', noremap = true, silent = true })
-        vim.keymap.set('n', '<leader>ac', ng.goto_component_with_template_file, { desc = 'Goto [C]omponent of template', noremap = true, silent = true })
+        require 'ng'
       end,
     },
     'nanotee/sqls.nvim',
@@ -115,6 +98,28 @@ return {
         --
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
+        if client.name == 'jdtls' then
+          vim.keymap.set('n', '<leader>dm', ':JavaTestDebugCurrentMethod<CR>', { buffer = event.buf, desc = '[M]ethod' })
+          vim.keymap.set('n', '<leader>dc', ':JavaTestDebugCurrentClass<CR>', { buffer = event.buf, desc = '[C]lass' })
+          vim.keymap.set('n', '<leader>dv', ':JavaTestViewLastReport<CR>', { buffer = event.buf, desc = '[V]iew last report' })
+        end
+
+        if client.name == 'angularls' then
+          local ng = require 'ng'
+          vim.keymap.set(
+            'n',
+            '<leader>lt',
+            ng.goto_template_for_component,
+            { buffer = event.buf, desc = 'Goto [T]emplate of component', noremap = true, silent = true }
+          )
+          vim.keymap.set(
+            'n',
+            '<leader>lc',
+            ng.goto_component_with_template_file,
+            { buffer = event.buf, desc = 'Goto [C]omponent of template', noremap = true, silent = true }
+          )
+        end
+
         if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
           local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
           vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
