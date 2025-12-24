@@ -28,8 +28,6 @@ return {
         require 'ng'
       end,
     },
-    'nanotee/sqls.nvim',
-
     -- Useful status updates for LSP.
     -- { 'j-hui/fidget.nvim', opts = {} },
 
@@ -186,15 +184,6 @@ return {
 
     local capabilities = require('blink.cmp').get_lsp_capabilities()
     local servers = {
-      lua_ls = {
-        settings = {
-          Lua = {
-            completion = {
-              callSnippet = 'Replace',
-            },
-          },
-        },
-      },
       angularls = {},
       cssls = {
         settings = {
@@ -214,11 +203,21 @@ return {
           },
         },
       },
-      yamlls = {},
       html = {},
+      jedi_language_server = {},
       jsonls = {},
       lemminx = {},
+      lua_ls = {
+        settings = {
+          Lua = {
+            completion = {
+              callSnippet = 'Replace',
+            },
+          },
+        },
+      },
       ts_ls = {},
+      yamlls = {},
     }
 
     local ensure_installed = vim.tbl_keys(servers or {})
@@ -226,16 +225,15 @@ return {
       -- Formatter
       'stylua',
       'prettier',
-      'google-java-format',
-      'sql-formatter',
+      'sqruff',
       -- Language servers
-      'sqlls',
       'angular-language-server',
       'css-lsp',
       'emmet-ls',
       'eslint-lsp',
       'helm-ls',
       'html-lsp',
+      'jedi-language-server',
       'json-lsp',
       'lemminx',
       'lua-language-server',
@@ -248,6 +246,7 @@ return {
       'markdownlint',
       'jsonlint',
       'yamllint',
+      'ruff',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

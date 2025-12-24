@@ -50,7 +50,8 @@ return { -- Autoformat
       markdown = { 'prettier' },
       yamlfmt = { 'prettier' },
       java = { 'palantir' },
-      sql = { 'sql_formatter' },
+      python = { 'ruff' },
+      sql = { 'sqruff' },
     },
   },
 }

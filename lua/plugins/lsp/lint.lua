@@ -13,6 +13,7 @@ return { -- Linting
       css = { 'stylelint' },
       scss = { 'stylelint' },
       sass = { 'stylelint' },
+      python = { 'ruff' },
     }
 
     -- Create autocommand which carries out the actual linting
