@@ -13,6 +13,8 @@ return {
           follow_current_file = {
             enabled = true,
           },
+          group_empty_dirs = true,
+          scan_mode = 'deep',
         },
       }
       vim.keymap.set('n', '<leader>et', ':Neotree filesystem toggle focus reveal right<CR>', { desc = 'Toggle file tree' })
