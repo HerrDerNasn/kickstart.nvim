@@ -19,7 +19,7 @@ return {
             enable = false,
           },
         }
-        vim.lsp.enable 'java'
+        vim.lsp.enable 'jdtls'
       end,
     },
     {
@@ -31,7 +31,7 @@ return {
     'nanotee/sqls.nvim',
 
     -- Useful status updates for LSP.
-    { 'j-hui/fidget.nvim', opts = {} },
+    -- { 'j-hui/fidget.nvim', opts = {} },
 
     -- Allows extra capabilities provided by blink.cmp
     'saghen/blink.cmp',
