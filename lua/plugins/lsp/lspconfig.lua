@@ -19,6 +19,21 @@ return {
             auto_install = false,
           },
         }
+        vim.lsp.config('jdtls', {
+          settings = {
+            java = {
+              configuration = {
+                runtimes = {
+                  {
+                    name = 'Home',
+                    path = '~/.sdkman/candidates/java/current',
+                    default = true,
+                  },
+                },
+              },
+            },
+          },
+        })
         vim.lsp.enable 'jdtls'
       end,
     },
@@ -97,8 +112,9 @@ return {
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         if client.name == 'jdtls' then
-          vim.keymap.set('n', '<leader>dm', ':JavaTestDebugCurrentMethod<CR>', { buffer = event.buf, desc = '[M]ethod' })
-          vim.keymap.set('n', '<leader>dc', ':JavaTestDebugCurrentClass<CR>', { buffer = event.buf, desc = '[C]lass' })
+          vim.keymap.set('n', '<leader>lr', ':JavaRunnerRunMain<CR>', { buffer = event.buf, desc = '[R]un main' })
+          vim.keymap.set('n', '<leader>dm', ':JavaTestDebugCurrentMethod<CR>', { buffer = event.buf, desc = 'Debug [M]ethod' })
+          vim.keymap.set('n', '<leader>dc', ':JavaTestDebugCurrentClass<CR>', { buffer = event.buf, desc = 'Debug [C]lass' })
           vim.keymap.set('n', '<leader>dv', ':JavaTestViewLastReport<CR>', { buffer = event.buf, desc = '[V]iew last report' })
         end
 
@@ -243,6 +259,7 @@ return {
       'stylelint',
       'htmlhint',
       'eslint_d',
+      'djlint',
       'markdownlint',
       'jsonlint',
       'yamllint',
