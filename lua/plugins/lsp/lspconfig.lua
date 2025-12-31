@@ -259,7 +259,6 @@ return {
       'stylelint',
       'htmlhint',
       'eslint_d',
-      'djlint',
       'markdownlint',
       'jsonlint',
       'yamllint',
