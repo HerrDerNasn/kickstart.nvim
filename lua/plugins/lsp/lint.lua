@@ -10,7 +10,6 @@ return { -- Linting
       javascript = { 'eslint_d' },
       typescript = { 'eslint_d' },
       html = { 'htmlhint' },
-      htmlangular = { 'htmlhint' },
       css = { 'stylelint' },
       scss = { 'stylelint' },
       sass = { 'stylelint' },
