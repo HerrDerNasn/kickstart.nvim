@@ -1,8 +1,10 @@
 return {
   'folke/snacks.nvim',
+  lazy = false,
+  priority = 1000,
   opts = {
     indent = { enabled = true },
-    input = { enabled = true },
+    input = { enabled = true, only_scope = true },
     statuscolumn = { enabled = true },
     lazygit = { enabled = true },
     git = { enabled = true },
