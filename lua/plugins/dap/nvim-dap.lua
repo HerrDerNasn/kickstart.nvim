@@ -61,7 +61,7 @@ return {
       function()
         require('dapui').toggle()
       end,
-      desc = 'Debug: See last session result.',
+      desc = 'Debug: Toggle UI.',
     },
   },
   config = function()
