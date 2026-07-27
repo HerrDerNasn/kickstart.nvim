@@ -64,3 +64,12 @@ vim.o.shiftwidth = 4
 vim.o.expandtab = true
 
 vim.o.swapfile = false
+
+-- Custom foldtext to make folded sections look clean and modern
+_G.custom_fold_text = function()
+  local line = vim.fn.getline(vim.v.foldstart)
+  local clean_line = line:gsub("^%s+", "")
+  local line_count = vim.v.foldend - vim.v.foldstart + 1
+  return " 󰁂 " .. clean_line .. " ... (" .. line_count .. " lines)"
+end
+vim.o.foldtext = "v:lua.custom_fold_text()"

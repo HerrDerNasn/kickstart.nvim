@@ -53,6 +53,23 @@ return {
           -- Start with all folds open
           vim.wo[0][0].foldlevel = 99
 
+          -- Auto-fold imports (defer execution so folds have been calculated)
+          vim.schedule(function()
+            if vim.api.nvim_buf_is_valid(args.buf) then
+              local max_lines = math.min(100, vim.api.nvim_buf_line_count(args.buf))
+              for lnum = 1, max_lines do
+                local lines = vim.api.nvim_buf_get_lines(args.buf, lnum - 1, lnum, false)
+                local line = lines[1] or ""
+                -- Match common import keywords (import, use, from ... import, include, require)
+                if line:match("^import[%s%(()]") or line:match("^use%s") or line:match("^from%s.+import%s") or line:match("^#include%s") or line:match("require%s*%(") or line:match("require%s*[\"']") then
+                  if vim.fn.foldlevel(lnum) > 0 and vim.fn.foldclosed(lnum) == -1 then
+                    pcall(vim.cmd, lnum .. "foldclose")
+                  end
+                end
+              end
+            end
+          end)
+
           -- Enable indentation
           vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
         end
