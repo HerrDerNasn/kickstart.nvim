@@ -4,7 +4,7 @@ return {
   priority = 1000,
   opts = {
     indent = { enabled = true },
-    input = { enabled = true, only_scope = true },
+    input = { enabled = true },
     statuscolumn = { enabled = true, folds = { open = true } },
     lazygit = { enabled = true },
     git = { enabled = true },
@@ -32,6 +32,13 @@ return {
         end
         local p = progress[client.id]
 
+        -- Filter out JDTLS validation and publish diagnostic spam from progress
+        local title = value.title or ''
+        local message = value.message or ''
+        if title:find 'Publish diagnostics' or title:find 'Validate documents' or message:find 'Publish diagnostics' or message:find 'Validate documents' then
+          return
+        end
+
         for i = 1, #p + 1 do
           if i == #p + 1 or p[i].token == ev.data.params.token then
             p[i] = {
@@ -57,8 +64,7 @@ return {
           id = 'lsp_progress',
           title = client.name,
           opts = function(notif)
-            notif.icon = #progress[client.id] == 0 and ' '
-              or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
+            notif.icon = #progress[client.id] == 0 and ' ' or spinner[math.floor(vim.uv.hrtime() / (1e6 * 80)) % #spinner + 1]
           end,
         })
       end,
