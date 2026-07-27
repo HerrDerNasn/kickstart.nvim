@@ -22,6 +22,19 @@ return {
         vim.lsp.config('jdtls', {
           settings = {
             java = {
+              autobuild = { enabled = false },
+              maxConcurrentBuilds = 1,
+              completion = { maxResults = 50 },
+              referencesCodeLens = { enabled = false },
+              implementationCodeLens = { enabled = false },
+              import = {
+                gradle = {
+                  offline = { enabled = true },
+                  arguments = { '--configure-on-demand' },
+                },
+              },
+              maven = { downloadSources = false },
+              eclipse = { downloadSources = false },
               configuration = {
                 runtimes = {
                   {
