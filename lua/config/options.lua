@@ -37,6 +37,9 @@ vim.o.smartcase = true
 -- Keep signcolumn on by default
 vim.o.signcolumn = 'yes'
 
+-- Enable foldcolumn to show fold indicators in the sidebar
+vim.o.foldcolumn = '1'
+
 -- Decrease update time
 vim.o.updatetime = 300
 

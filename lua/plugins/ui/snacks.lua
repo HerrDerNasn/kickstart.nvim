@@ -5,7 +5,7 @@ return {
   opts = {
     indent = { enabled = true },
     input = { enabled = true, only_scope = true },
-    statuscolumn = { enabled = true },
+    statuscolumn = { enabled = true, folds = { open = true } },
     lazygit = { enabled = true },
     git = { enabled = true },
   },
