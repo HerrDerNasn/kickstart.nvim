@@ -256,12 +256,7 @@ return {
       'typescript-language-server',
       'yaml-language-server',
       -- Linter
-      'stylelint',
-      'htmlhint',
       'eslint_d',
-      'markdownlint',
-      'jsonlint',
-      'yamllint',
       'ruff',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }

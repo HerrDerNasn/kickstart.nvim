@@ -82,7 +82,7 @@ return {
       ensure_installed = {},
     }
 
-    require('dap.ext.vscode').load_launchjs(nil, {})
+    -- require('dap.ext.vscode').load_launchjs(nil, {})
 
     dapui.setup {}
 

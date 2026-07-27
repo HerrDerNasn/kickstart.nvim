@@ -4,15 +4,8 @@ return { -- Linting
   config = function()
     local lint = require 'lint'
     lint.linters_by_ft = {
-      markdown = { 'markdownlint' },
-      yaml = { 'yamllint' },
-      json = { 'jsonlint' },
       javascript = { 'eslint_d' },
       typescript = { 'eslint_d' },
-      html = { 'htmlhint' },
-      css = { 'stylelint' },
-      scss = { 'stylelint' },
-      sass = { 'stylelint' },
       python = { 'ruff' },
     }
 

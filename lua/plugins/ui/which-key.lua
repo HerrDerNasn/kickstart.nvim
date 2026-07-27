@@ -15,7 +15,7 @@ return { -- Useful plugin to show you pending keybinds.
     -- Document existing key chains
     spec = {
       { '<leader>s', group = '[S]earch' },
-      { '<leader>e', group = 'Nvim Tr[e]e' },
+      { '<leader>e', group = '[E]vent' },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>g', group = '[G]it', mode = { 'n' } },
       { '<leader>d', group = '[D]ebug' },

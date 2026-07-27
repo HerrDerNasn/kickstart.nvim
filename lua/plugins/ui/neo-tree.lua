@@ -17,8 +17,8 @@ return {
           scan_mode = 'deep',
         },
       }
-      vim.keymap.set('n', '<leader>et', ':Neotree filesystem toggle focus reveal right<CR>', { desc = 'Toggle file tree' })
-      vim.keymap.set('n', '<leader>ef', ':Neotree filesystem focus reveal right<CR>', { desc = 'Focus file tree' })
+      vim.keymap.set('n', '<leader>tt', ':Neotree filesystem toggle focus reveal right<CR>', { desc = 'Toggle file tree' })
+      vim.keymap.set('n', '<leader>tf', ':Neotree filesystem focus reveal right<CR>', { desc = 'Focus file tree' })
     end,
   },
   {
