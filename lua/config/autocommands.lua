@@ -49,3 +49,12 @@ vim.api.nvim_create_autocmd({ 'BufNewFile', 'Bufread' }, {
     vim.api.nvim_win_set_cursor(0, { #lines - 1, 0 })
   end,
 })
+
+-- Customize Folded highlight group to have the same background as the editor and a muted comment-like text color
+vim.api.nvim_create_autocmd('ColorScheme', {
+  desc = 'Customize Folded highlight group appearance',
+  group = vim.api.nvim_create_augroup('custom-folded-hl', { clear = true }),
+  callback = function()
+    vim.api.nvim_set_hl(0, 'Folded', { link = 'Comment' })
+  end,
+})
