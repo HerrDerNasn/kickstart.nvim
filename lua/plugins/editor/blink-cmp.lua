@@ -25,19 +25,6 @@ return { -- Autocompletion
       },
     },
 
-    sources = {
-      default = { 'lsp', 'path', 'snippets', 'buffer' },
-      providers = {
-        snippets = {
-          opts = {
-            friendly_snippets = true,
-          },
-        },
-      },
-    },
-
-    snippets = { preset = 'default' },
-
     fuzzy = { implementation = 'rust' },
 
     signature = {
