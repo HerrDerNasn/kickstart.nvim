@@ -21,6 +21,7 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>d', group = '[D]ebug' },
       { '<leader>q', group = 'Diagnostics' },
       { '<leader>l', group = '[L]sp' },
+      { '<leader>m', group = '[M]arkview' },
     },
   },
 }
