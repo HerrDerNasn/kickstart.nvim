@@ -14,6 +14,24 @@ return {
     notifier = {
       enabled = true,
       timeout = 3000,
+      top_down = false,
+      margin = {
+        top = 0,
+        right = 0,
+        bottom = 1,
+        left = 1,
+      },
+    },
+    styles = {
+      notification = {
+        border = "shadow",
+      },
+      input = {
+        border = "shadow",
+        relative = "editor",
+        row = -2,
+        col = 0.5,
+      },
     },
   },
   config = function(_, opts)
