@@ -46,13 +46,6 @@ return {
           -- Enable syntax highlighting
           pcall(vim.treesitter.start, args.buf, lang)
 
-          -- Enable folds
-          vim.wo[0][0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-          vim.wo[0][0].foldmethod = 'expr'
-
-          -- Start with all folds open
-          vim.wo[0][0].foldlevel = 99
-
           -- Auto-fold imports (defer execution so folds have been calculated)
           vim.schedule(function()
             if vim.api.nvim_buf_is_valid(args.buf) then

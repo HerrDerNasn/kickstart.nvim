@@ -39,6 +39,10 @@ vim.o.signcolumn = 'yes'
 
 -- Enable foldcolumn to show fold indicators in the sidebar
 vim.o.foldcolumn = '1'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 -- Decrease update time
 vim.o.updatetime = 300
