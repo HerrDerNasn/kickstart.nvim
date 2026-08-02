@@ -31,6 +31,17 @@ return {
                   },
                 },
               },
+              inlayHints = {
+                parameterNames = {
+                  enabled = 'ALL',
+                },
+              },
+              signatureHelp = {
+                enabled = true,
+                description = {
+                  enabled = true,
+                },
+              },
             },
           },
         })
@@ -98,6 +109,9 @@ return {
         --  the definition of its *type*, not where it was *defined*.
         map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
+        -- Register insert mode signature help
+        map('<C-k>', vim.lsp.buf.signature_help, 'Signature Help', 'i')
+
         -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
         ---@param client vim.lsp.Client
         ---@param method vim.lsp.protocol.Method
@@ -117,14 +131,17 @@ return {
         --
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client.name == 'jdtls' then
+        if client and client.name == 'jdtls' then
+          if client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
+            vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
+          end
           vim.keymap.set('n', '<leader>lr', ':JavaRunnerRunMain<CR>', { buffer = event.buf, desc = '[R]un main' })
           vim.keymap.set('n', '<leader>dm', ':JavaTestDebugCurrentMethod<CR>', { buffer = event.buf, desc = 'Debug [M]ethod' })
           vim.keymap.set('n', '<leader>dC', ':JavaTestDebugCurrentClass<CR>', { buffer = event.buf, desc = 'Debug [C]lass' })
           vim.keymap.set('n', '<leader>dv', ':JavaTestViewLastReport<CR>', { buffer = event.buf, desc = '[V]iew last report' })
         end
 
-        if client.name == 'angularls' then
+        if client and client.name == 'angularls' then
           local ng = require 'ng'
           vim.keymap.set(
             'n',
@@ -239,6 +256,7 @@ return {
         },
       },
       ts_ls = {},
+      typos_lsp = {}, -- Added for smart, code-aware spellchecking
       yamlls = {},
     }
 
@@ -261,6 +279,7 @@ return {
       'lua-language-server',
       'typescript-language-server',
       'yaml-language-server',
+      'typos-lsp',
       -- Linter
       'eslint_d',
       'ruff',
