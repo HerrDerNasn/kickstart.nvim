@@ -132,9 +132,6 @@ return {
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         if client and client.name == 'jdtls' then
-          if client_supports_method(client, vim.lsp.protocol.Methods.textDocument_inlayHint, event.buf) then
-            vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })
-          end
           vim.keymap.set('n', '<leader>lr', ':JavaRunnerRunMain<CR>', { buffer = event.buf, desc = '[R]un main' })
           vim.keymap.set('n', '<leader>dm', ':JavaTestDebugCurrentMethod<CR>', { buffer = event.buf, desc = 'Debug [M]ethod' })
           vim.keymap.set('n', '<leader>dC', ':JavaTestDebugCurrentClass<CR>', { buffer = event.buf, desc = 'Debug [C]lass' })
