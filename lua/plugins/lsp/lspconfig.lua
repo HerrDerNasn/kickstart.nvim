@@ -31,17 +31,6 @@ return {
                   },
                 },
               },
-              inlayHints = {
-                parameterNames = {
-                  enabled = 'ALL',
-                },
-              },
-              signatureHelp = {
-                enabled = true,
-                description = {
-                  enabled = true,
-                },
-              },
             },
           },
         })

@@ -15,6 +15,18 @@ return {
           },
           group_empty_dirs = true,
           scan_mode = 'deep',
+          window = {
+            mappings = {
+              ['o'] = function(state)
+                local node = state.tree:get_node()
+                local path = node:get_id()
+                if node.type ~= 'directory' then
+                  path = vim.fs.dirname(path)
+                end
+                vim.fn.system(string.format('tmux new-window -c %s', vim.fn.shellescape(path)))
+              end,
+            },
+          },
         },
       }
       vim.keymap.set('n', '<leader>tt', ':Neotree filesystem toggle focus reveal right<CR>', { desc = 'Toggle file tree' })
