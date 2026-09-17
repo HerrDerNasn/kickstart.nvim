@@ -241,7 +241,8 @@ return {
           },
         },
       },
-      ts_ls = {},
+      vtsls = {},
+      -- ts_ls = {},
       typos_lsp = {}, -- Added for smart, code-aware spellchecking
       yamlls = {},
     }
@@ -263,7 +264,8 @@ return {
       'json-lsp',
       'lemminx',
       'lua-language-server',
-      'typescript-language-server',
+      'vtsls',
+      -- 'typescript-language-server',
       'yaml-language-server',
       'typos-lsp',
       -- Linter
