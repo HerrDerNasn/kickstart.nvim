@@ -20,6 +20,9 @@ return {
           },
         }
         vim.lsp.config('jdtls', {
+          cmd_env = {
+            JDK_JAVA_OPTIONS = '-Xmx2G -XX:+UseG1GC -XX:+UseStringDeduplication',
+          },
           settings = {
             java = {
               configuration = {
@@ -29,6 +32,52 @@ return {
                     path = '~/.sdkman/candidates/java/current',
                     default = true,
                   },
+                },
+                updateBuildConfiguration = 'interactive',
+              },
+              maven = {
+                downloadSources = false,
+                updateSnapshots = false,
+              },
+              eclipse = {
+                downloadSources = false,
+              },
+              import = {
+                gradle = {
+                  enabled = false,
+                },
+                maven = {
+                  enabled = true,
+                  offline = {
+                    enabled = false,
+                  },
+                },
+              },
+              maxConcurrentBuilds = 2,
+              referencesCodeLens = {
+                enabled = false,
+              },
+              implementationsCodeLens = {
+                enabled = false,
+              },
+              completion = {
+                filteredTypes = {
+                  'com.sun.*',
+                  'io.micrometer.shaded.*',
+                  'java.awt.*',
+                  'jdk.*',
+                  'org.graalvm.*',
+                  'sun.*',
+                },
+              },
+              project = {
+                resourceFilters = {
+                  'node_modules',
+                  '.git',
+                  'target',
+                  'build',
+                  '.vscode',
+                  '.idea',
                 },
               },
             },
