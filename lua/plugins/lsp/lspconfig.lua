@@ -74,7 +74,6 @@ return {
                 resourceFilters = {
                   'node_modules',
                   '.git',
-                  'target',
                   'build',
                   '.vscode',
                   '.idea',
